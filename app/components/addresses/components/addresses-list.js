@@ -1,16 +1,15 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, Building, Edit, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Box, Building, CircleDollarSignIcon, DollarSign, Edit, Loader2, LucideDelete } from "lucide-react";
 
-const AddressListItem = ({ addr, setAddressToEdit, setAddressFormIsOpen }) => {
+const AddressListItem = ({ addr, setAddressToEdit, setAddressFormIsOpen, onDelete }) => {
     return (
-        <li className="flex items-end justify-between gap-4 flex-wrap border-gray-200 border bg-white p-2 rounded text-sm text-gray-700">
+        <li className="grid gap-4 md:grid-cols-2 border-gray-200 border bg-white p-2 rounded text-sm text-gray-700">
             <section>
                 <div className="font-medium">
                     {addr.first_name} {addr.last_name}
                 </div>
-                <div>{addr.address_line_1}</div>
-                {addr.address_line_2 && <div>{addr.address_line_2}</div>}
+                <div>{addr.address_line_1}{addr.address_line_2 && <span> • {addr.address_line_2}</span>}</div>
                 <div>
                     {addr.city}, {addr.state} {addr.postal_code}
                 </div>
@@ -19,24 +18,42 @@ const AddressListItem = ({ addr, setAddressToEdit, setAddressFormIsOpen }) => {
                     {addr.email_address} • {addr.phone_number}
                 </div>
             </section>
-            <section className="grid grid-cols-[auto_auto] gap-4 place-content-end">
-                <button
-                    onClick={() => {
-                        setAddressToEdit(addr);
-                        setAddressFormIsOpen(true);
-                    }}
-                    type="submit"
-                    className="cursor-pointer bg-sky-500 text-white font-bold flex items-center space-x-2 px-4 py-2 rounded-lg transition hover:scale-105 active:scale-100 disabled:cursor-not-allowed"
-                >
-                    <Edit />
-                    <span>Update</span>
-                </button>
-                {/* <button
-                    type="submit"
-                    className="cursor-pointer bg-red-500 text-white font-bold flex items-center space-x-2 px-4 py-2 rounded-lg transition hover:scale-105 active:scale-100 disabled:cursor-not-allowed"
-                >
-                    Delete
-                </button> */}
+            <section className="h-full flex gap-4 text-xs md:flex-col justify-between">
+                <div className="flex justify-end">
+                    {addr.type == "shipping" && (
+                        <div className="flex items-center space-x-2 bg-sky-200 text-zinc-500 px-4 py-2 rounded-3xl w-max">
+                            <Box size={15} />
+                            <span className="font-semibold">Shipping Addr</span>
+                        </div>
+                    )}
+                    {addr.type == "billing" && (
+                        <div className="flex items-center space-x-2 bg-green-100 text-zinc-500 px-4 py-2 rounded-3xl w-max">
+                            <CircleDollarSignIcon size={15} />
+                            <span className="font-semibold">Billing Addr</span>
+                        </div>
+                    )}
+                </div>
+                <div className="grid grid-cols-[auto_auto] gap-4 place-content-end">
+                    <button
+                        onClick={() => {
+                            setAddressToEdit(addr);
+                            setAddressFormIsOpen(true);
+                        }}
+                        type="submit"
+                        className="cursor-pointer font-bold flex items-center space-x-2 transition hover:scale-105 active:scale-100 disabled:cursor-not-allowed"
+                    >
+                        <Edit size={20} />
+                        <span>Update</span>
+                    </button>
+                    <button
+                        onClick={() => onDelete(addr.id)}
+                        type="submit"
+                        className="cursor-pointer font-bold flex items-center space-x-2 text-red-500 transition hover:scale-105 active:scale-100 disabled:cursor-not-allowed"
+                    >
+                        <LucideDelete size={20} />
+                        <span>Delete</span>
+                    </button>
+                </div>
             </section>
         </li>
     );
@@ -51,7 +68,8 @@ export default function AddressesList({
     totalItems,
     totalPages,
     setAddressToEdit,
-    setAddressFormIsOpen
+    setAddressFormIsOpen,
+    onDelete
 }) {
     const handleNext = () => setPage((p) => Math.min(p + 1, totalPages));
     const handlePrev = () => setPage((p) => Math.max(p - 1, 1));
@@ -76,6 +94,7 @@ export default function AddressesList({
                             addr={addr}
                             setAddressToEdit={setAddressToEdit}
                             setAddressFormIsOpen={setAddressFormIsOpen}
+                            onDelete={onDelete}
                         />
                     ))}
             </ul>

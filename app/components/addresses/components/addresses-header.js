@@ -1,12 +1,15 @@
 "use client";
 
-import { PlusCircle } from "lucide-react";
+import { HouseIcon, LocateIcon, Pin, PlusCircle } from "lucide-react";
 
 export default function AddressesHeader({ onClickAddAddress }) {
     return (
         <header className="grid lg:grid-cols-[1fr_auto] gap-4">
             <div className="space-y-2">
-                <h1 className="text-3xl">Addresses</h1>
+                <h1 className="flex items-center space-x-2 text-3xl">
+                    <HouseIcon size={30} />
+                    <span>Addresses</span>
+                </h1>
                 <p className="text-sm text-zinc-500">
                     This is how you can pre-store billing and shipping addresses applied to tasks,
                     and more specifically used at checkout time.

@@ -69,6 +69,23 @@ export default function Addresses() {
         setIsAddressFormModalOpen(false);
     }
 
+    // Delete an address
+    const onDeleteAddress = async (id) => {
+        setIsProcessingAddress(true);
+        const endpoint = process.env.NEXT_PUBLIC_API_URL + `/addresses/${id}`;
+
+        const request = await fetch(endpoint, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': "application/json"
+            },
+        });
+        const response = await request.json();
+        console.log(response);
+
+        setIsProcessingAddress(false);
+    }
+
     useEffect(() => {
         fetchAddresses(page);
     }, [page, isProcessingAddress]);
@@ -107,6 +124,8 @@ export default function Addresses() {
                     // ↓ Edit Intent
                     setAddressToEdit={setAddressToEdit}
                     setAddressFormIsOpen={setIsAddressFormModalOpen}
+                    // ↓ Delete Intent
+                    onDelete={onDeleteAddress}
                 />
             </div>
         </>
